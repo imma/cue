@@ -62,7 +62,7 @@ function git_branch {
 
 function git_status {
   local gitstat=$(mktemp -t XXXXXX)
-  git_real status --ignore-submodules=dirty 2>/dev/null > $gitstat
+  git_real status -sb --ignore-submodules=dirty 2>/dev/null > $gitstat
  
   if [[ $(grep -c "# Your branch is ahead" $gitstat) > 0 ]]; then
     echo -n "^"
@@ -74,42 +74,9 @@ function git_status {
 
   echo -n " "
 
-  local num
-  if [[ $(grep -c "# Changes" $gitstat) > 0 ]]; then
-    num=$(sed -n '/^# Changes/,/^# [^ ]/p' $gitstat | grep '^#	' | wc -l | awk '{print $1}')
-    if [[ "$num" -gt 9 ]]; then
-        echo -n "!!{$num}!!"
-    else
-      while [[ "$num" > 0 ]]; do 
-      echo -n "!"
-      num=$((num -1))
-      done
-    fi
-  fi
-
-  if [[ $(grep -c "# Changed" $gitstat) > 0 ]]; then
-    num=$(sed -n '/^# Changed/,/^# [^ ]/p' $gitstat | grep '^#	' | wc -l | awk '{print 1}')
-    if [[ "$num" -gt 9 ]]; then
-        echo -n "??{$num}??"
-    else
-        while [[ "$num" > 0 ]]; do 
-        echo -n "?"
-        num=$((num -1))
-        done
-    fi
-  fi
-
-  if [[ $(grep -c "# Untracked" $gitstat) > 0 ]]; then
-    num=$(sed -n '/^# Untracked/,/^# [^ ]/p' $gitstat | grep '^#	' | wc -l | awk '{print $1}')
-    if [[ "$num" -gt 9 ]]; then
-        echo -n "**{$num}**"
-    else
-        while [[ "$num" > 0 ]]; do 
-        echo -n "*"
-        num=$((num -1))
-        done
-    fi
-  fi
+  grep -v '^#' "$gitstat" | awk '{print $1}' | uniq -c | sort -k2 | while read -r num type; do
+    echo -n "${scomment}:${shigh}$type${scomment}(${syellow}$num${scomment})"
+  done
 
   rm -f $gitstat
 }
