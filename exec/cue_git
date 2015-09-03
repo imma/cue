@@ -1,0 +1,150 @@
+#!/bin/bash
+
+function git_real {
+  $(type -P git) "$@"
+}
+
+function git_upstream {
+  local nm_branch="$1"; shift
+
+  git for-each-ref --shell --format="%(upstream:short)" "refs/heads/$nm_branch" | cut -d"'" -f2 | cut -d/ -f2-
+}
+
+function git_project {
+  local gitname=$(git_real config remote.origin.name)
+  if [[ -z $gitname ]]; then
+    gitname=$(basename $(git_real config remote.origin.url) .git)
+  fi
+  echo "$gitname"
+}
+
+function git_branch {
+  local nm_heads="$(git_real symbolic-ref HEAD 2> /dev/null)"
+  nm_heads="${nm_heads/refs\/heads\//}"
+
+  local nm_branch=""
+  if [[ -n "$nm_heads" ]]; then
+    if [[ "$nm_heads" = "production" ]]; then
+      nm_branch="${syellow}$nm_heads"
+    else
+      nm_branch="${shigh}$nm_heads"
+    fi
+
+    local nm_upstream="$(git_upstream "$nm_heads")"
+    if [[ "$nm_upstream" != "$nm_heads" ]]; then
+      nm_branch="${nm_branch}=>${syellow}${nm_upstream}:"
+    fi
+  fi
+
+  local sha="$(git_real rev-parse HEAD)"
+  local nm_tags="$(git_real show-ref --tags | grep ^$sha | cut -d/ -f3- | xargs -- | sed 's# #,#g')"
+
+  if [[ -n "$nm_tags" ]]; then
+    # on a tag
+    nm_branch="$nm_branch${scomment}<${syellow}$nm_tags${scomment}>"
+  else
+    if [[ -z "$nm_heads" ]]; then
+      # no branch name, so get short sha
+      nm_branch="${syellow}$(git_real show-ref --head -s --abbrev | head -n1 2> /dev/null)"
+    fi
+
+    # on a branch, untagged
+    local last_tag="$(git_real log --oneline --decorate | perl -ne 'map { print join(" ",m{tag:\s+([^,\)]+)}g), "\n" } (m{ ^[0-9a-f]{7}\s+ (\([^)]+)}xg)' | egrep -v '^\s*$' | head -1 | awk '{print $1}')"
+    if [[ -n "$last_tag" ]]; then
+      # found the closest tag
+      local num_commits="$(git_real log $last_tag..HEAD | grep ^commit | wc -l | awk '{print $1}')"
+      nm_branch="$nm_branch${scomment}<${syellow}${last_tag}${scomment}/${sorange}${num_commits}${scomment}>"
+    fi
+  fi
+  
+  echo "$nm_branch"
+} 
+
+function git_status {
+  local gitstat=$(mktemp -t XXXXXX)
+  git_real status --ignore-submodules=dirty 2>/dev/null > $gitstat
+ 
+  if [[ $(grep -c "# Your branch is ahead" $gitstat) > 0 ]]; then
+    echo -n "^"
+  elif [[ $(grep -c "# Your branch is behind" $gitstat) > 0 ]]; then
+    echo -n "v"
+  else
+    echo -n ":"
+  fi
+
+  echo -n " "
+
+  local num
+  if [[ $(grep -c "# Changes" $gitstat) > 0 ]]; then
+    num=$(sed -n '/^# Changes/,/^# [^ ]/p' $gitstat | grep '^#	' | wc -l | awk '{print $1}')
+    if [[ "$num" -gt 9 ]]; then
+        echo -n "!!{$num}!!"
+    else
+      while [[ "$num" > 0 ]]; do 
+      echo -n "!"
+      num=$((num -1))
+      done
+    fi
+  fi
+
+  if [[ $(grep -c "# Changed" $gitstat) > 0 ]]; then
+    num=$(sed -n '/^# Changed/,/^# [^ ]/p' $gitstat | grep '^#	' | wc -l | awk '{print 1}')
+    if [[ "$num" -gt 9 ]]; then
+        echo -n "??{$num}??"
+    else
+        while [[ "$num" > 0 ]]; do 
+        echo -n "?"
+        num=$((num -1))
+        done
+    fi
+  fi
+
+  if [[ $(grep -c "# Untracked" $gitstat) > 0 ]]; then
+    num=$(sed -n '/^# Untracked/,/^# [^ ]/p' $gitstat | grep '^#	' | wc -l | awk '{print $1}')
+    if [[ "$num" -gt 9 ]]; then
+        echo -n "**{$num}**"
+    else
+        while [[ "$num" > 0 ]]; do 
+        echo -n "*"
+        num=$((num -1))
+        done
+    fi
+  fi
+
+  rm -f $gitstat
+}
+
+function prompt_git {
+  # git parent?
+  if ! $(type -P git) rev-parse HEAD >/dev/null 2>&1; then
+    return 0
+  fi
+
+  # optional git
+  local tmp_project="$(mktemp -t XXXXXXXXX)"
+  local tmp_status="$(mktemp -t XXXXXXXXX)"
+  local tmp_branch="$(mktemp -t XXXXXXXXX)"
+  git_status > $tmp_status &
+  git_branch > $tmp_branch &
+  git_project > $tmp_project &
+  wait
+
+  local nm_project="$(cat $tmp_project)"
+  local gstatus="$(cat $tmp_status)"
+  local nm_branch="$(cat $tmp_branch)"
+  rm -f $tmp_project $tmp_status $tmp_branch
+
+  if [[ -n $nm_project ]]; then
+    local clr_gstatus="${scomment}"
+    if [[ -n $nm_branch ]]; then
+      if [[ ${gstatus% *} != ":" ]]; then
+        clr_gstatus="${syellow}"
+      fi
+    else
+      gstatus=': '
+      clr_gstatus="${syellow}"
+      nm_branch="${scomment}<${sred}unknown${scomment}>"
+    fi
+    echo " $nm_branch${clr_gstatus}${gstatus% *}${shigh}$nm_project${syellow}${gstatus#* }"
+  fi
+}

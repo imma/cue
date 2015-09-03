@@ -1,0 +1,33 @@
+#!/bin/bash
+
+function prompt_ssh {
+  # ssh trail
+  local hst_this
+  if [[ -f $HOME/.name ]]; then
+    hst_this=$(cat $HOME/.name)
+  else
+    hst_this=$(hostname -s)
+  fi
+
+  export CUE_HOST="$hst_this"
+
+  local txt_origin
+  if [[ -n ${LC_ORIGIN:-} && $LC_ORIGIN != "$hst_this" ]]; then
+    txt_origin="/$LC_ORIGIN"
+    export LC_ORIGIN="$hst_this${txt_origin}"
+  fi
+
+  local nm_user="$LOGNAME"
+
+  if [[ "$nm_user" = "root" ]]; then
+    nm_user="${sorange}${nm_user}"
+  else
+    nm_user="${shigh}${nm_user}"
+  fi
+
+  if [[ -n ${LC_ORIGIN:-} && $LC_ORIGIN != "$hst_this" ]]; then
+    echo " ${nm_user}${shigh}@$hst_this${scomment}${txt_origin}"
+  else
+    echo " ${nm_user}${shigh}@$hst_this"
+  fi
+}

@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+function profile {
+  local shome="$(unset CDPATH; cd -P -- "$(dirname -- "$BASH_SOURCE")/.." && pwd -P)"
+  PATH="$shome/bin:$shome/exec:$PATH"
+
+  source "cue_solarized"
+  source "cue_pwd"
+  source "cue_ssh"
+  source "cue_git"
+  source "cue_theme"
+  source "cue_prompt"
+}
+
+profile
