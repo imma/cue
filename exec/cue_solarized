@@ -54,6 +54,10 @@ function _ansi {
   echo -n "\[\e[${1}m\]"
 }
 
+function _iterm {
+  echo -n -e "\033]P${1}\033\\"
+}
+
 _sbase00="1;33"
 _sbase01="1;32"
 _sbase02="0;30"
@@ -97,7 +101,7 @@ syellow="$(_ansi "$_syellow")"
 xbase00='#657b83'
 xbase01='#586e75'
 xbase02='#073642'
-xbase03='rgb:0000/2b2b/3636' # '#002b36'
+xbase03='#002b36'
 
 xbase0='#839496'
 xbase1='#93a1a1'
@@ -113,38 +117,15 @@ xred='#dc322f'
 xviolet='#6c71c4'
 xyellow='#b58900'
 
-function cmd_xc {
-  local cmd_xc="$(which xtermset 2>&-)"
-  if [[ -x "$cmd_xc" ]]; then
-    "$cmd_xc" "$@"
-  else
-    true
-  fi
-}
-
 function sdark {
   export sbg="$sdbg"
   export sm="$sdm"
   export stext="$sdtext"
   export scomment="$sdcomment"
   export shigh="$sdhigh"
-  if [[ -z "${sscheme:-}" || "${sscheme:-}" != "${1:-}" ]]; then
-    if [[ -n "${DISPLAY:-}" && "${TERM%%-*}" = "xterm" && -x "cmd_xc" ]]; then
-      "cmd_xc" -bg "$xbase03" -fg "$xbase0"
-      export CUE_BG="$xbase03"
-      if [[ -n "${1:-}" ]]; then
-        export sscheme="$1"
-      fi
-    fi
-  elif [[ "${sscheme:-}" = "${1:-}" ]]; then
-    if [[ -n "${DISPLAY:-}" && "${TERM%%-*}" = "xterm" && -x "cmd_xc" ]]; then
-      local xc_bg="$("cmd_xc" -get-bg)"
-      if [[ "$xc_bg" != "$xbase03" ]]; then
-        "cmd_xc" -bg "$xbase03" -fg "$xbase0"
-        export CUE_BG="$xbase03"
-      fi
-    fi
-  fi
+
+  echo "$(_iterm "h$xbase03")"
+  echo "$(_iterm "g$xbase0")"
 }
 
 function slight {
@@ -153,13 +134,6 @@ function slight {
   export stext="$sltext"
   export scomment="$slcomment"
   export shigh="$slhigh"
-  if [[ -z "${sscheme:-}" || "${sscheme:-}" != "${1:-}" ]]; then
-    if [[ -n "${DISPLAY:-}" && "${TERM%%-*}" = "xterm" && -x "cmd_xc" ]]; then
-      "cmd_xc" -bg "$xbase3" -fg "$xbase00"
-      export CUE_BG="$xbase3"
-      if [[ -n "${1:-}" ]]; then
-        export sscheme="$1"
-      fi
-    fi
-  fi
+  echo "$(_iterm "h$xbase3")"
+  echo "$(_iterm "g$xbase00")"
 }
