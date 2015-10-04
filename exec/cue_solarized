@@ -98,24 +98,24 @@ sred="$(_ansi "$_sred")"
 sviolet="$(_ansi "$_sviolet")"
 syellow="$(_ansi "$_syellow")"
 
-xbase00='#657b83'
-xbase01='#586e75'
-xbase02='#073642'
-xbase03='#002b36'
+xbase00='657b83'
+xbase01='586e75'
+xbase02='073642'
+xbase03='002b36'
 
-xbase0='#839496'
-xbase1='#93a1a1'
-xbase2='#eee8d5'
-xbase3='#fdf6e3'
+xbase0='839496'
+xbase1='93a1a1'
+xbase2='eee8d5'
+xbase3='fdf6e3'
 
-xblue='#268bd2'
-xcyan='#2aa198'
-xgreen='#859900'
-xmagenta='#d33682'
-xorange='#cb4b16'
-xred='#dc322f'
-xviolet='#6c71c4'
-xyellow='#b58900'
+xblue='268bd2'
+xcyan='2aa198'
+xgreen='859900'
+xmagenta='d33682'
+xorange='cb4b16'
+xred='dc322f'
+xviolet='6c71c4'
+xyellow='b58900'
 
 function sdark {
   export sbg="$sdbg"
@@ -124,8 +124,8 @@ function sdark {
   export scomment="$sdcomment"
   export shigh="$sdhigh"
 
-  echo "$(_iterm "h$xbase03")"
-  echo "$(_iterm "g$xbase0")"
+  echo -n "$(_iterm "h$xbase03")"
+  echo -n "$(_iterm "g$xbase0")"
 }
 
 function slight {
@@ -134,6 +134,6 @@ function slight {
   export stext="$sltext"
   export scomment="$slcomment"
   export shigh="$slhigh"
-  echo "$(_iterm "h$xbase3")"
-  echo "$(_iterm "g$xbase00")"
+  echo -n "$(_iterm "h$xbase3")"
+  echo -n "$(_iterm "g$xbase00")"
 }
