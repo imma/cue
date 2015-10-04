@@ -124,8 +124,12 @@ function sdark {
   export scomment="$sdcomment"
   export shigh="$sdhigh"
 
-  echo -n "$(_iterm "h$xbase03")"
-  echo -n "$(_iterm "g$xbase0")"
+  case "${TERM_PROGRAM:-}" in
+    iTerm.app)
+      _iterm "h$xbase03"
+      _iterm "g$xbase0"
+      ;;
+  esac
 }
 
 function slight {
@@ -134,6 +138,11 @@ function slight {
   export stext="$sltext"
   export scomment="$slcomment"
   export shigh="$slhigh"
-  echo -n "$(_iterm "h$xbase3")"
-  echo -n "$(_iterm "g$xbase00")"
+
+  case "${TERM_PROGRAM:-}" in
+    iTerm.app)
+      _iterm "h$xbase3"
+      _iterm "g$xbase00"
+      ;;
+  esac
 }
