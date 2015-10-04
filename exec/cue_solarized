@@ -20,6 +20,7 @@ sviolet="$(_ansi "$_sviolet")"
 syellow="$(_ansi "$_syellow")"
 
 function sdark {
+  export CUE_SCHEME="sdark"
   case "${TERM_PROGRAM:-}" in
     iTerm.app)
       export sbg="$(_ansi "$_sbase03")"
@@ -42,6 +43,7 @@ function sdark {
 }
 
 function slight {
+  export CUE_SCHEME="slight"
   case "${TERM_PROGRAM:-}" in
     iTerm.app)
       export sbg="$(_ansi "$_sbase3")"
@@ -62,3 +64,12 @@ function slight {
       ;;
   esac
 }
+
+function snormal {
+  case "${CUE_SCHEME:-sdark}" in
+    sdark|slight)
+      "$CUE_SCHEME"
+      ;;
+  esac
+}
+
