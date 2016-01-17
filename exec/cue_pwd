@@ -2,5 +2,5 @@
 
 function prompt_pwd {
   # pwd
-  echo " ${shigh}${PWD/$HOME/~}"
+  echo " ${shigh}${PWD/$HOME/\~}"
 }
