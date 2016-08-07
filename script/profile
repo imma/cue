@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-function profile {
+function _cue_profile {
   local shome="${_cue_home:-"$(cd -P -- "$(dirname -- "$BASH_SOURCE")/.." && pwd -P)"}"
   PATH="$shome/exec:$PATH"
 
@@ -12,4 +12,4 @@ function profile {
   source "cue_prompt"
 }
 
-profile
+_cue_profile
