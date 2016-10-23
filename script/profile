@@ -1,5 +1,17 @@
 #!/usr/bin/env bash
 
+function configure_cue {
+  case "${TERM:-}" in
+    screen*) TERM="screen-256color" ;;
+    *)       TERM="xterm-256color" ;;
+  esac
+  export TERM
+
+  : ${SHLVL_INITIAL:=0}
+
+  sdark
+}
+
 function _cue_profile {
   local shome="${_cue_home:-"$(cd -P -- "$(dirname -- "$BASH_SOURCE")/.." && pwd -P)"}"
   PATH="$shome/exec:$PATH"
@@ -10,6 +22,12 @@ function _cue_profile {
   source "cue_git"
   source "cue_theme"
   source "cue_prompt"
+  
+  if [[ -z "${CUE_SCHEME:-}" ]]; then
+    if tty >/dev/null 2>&1; then
+      configure_cue
+    fi
+  fi
 }
 
 _cue_profile
