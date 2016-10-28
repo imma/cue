@@ -62,7 +62,7 @@ function git_branch {
 
 function git_status {
   local gitstat=$(mktemp -t XXXXXX)
-  git_real status -sb --ignore-submodules=dirty 2>/dev/null > $gitstat
+  git_real status -sb --ignore-submodules=dirty 2>/dev/null | sort > $gitstat
  
   if [[ $(grep -c "# Your branch is ahead" $gitstat) > 0 ]]; then
     echo -n "^"
