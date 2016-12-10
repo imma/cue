@@ -1,5 +1,25 @@
 #!/bin/bash
 
+function aws_expiration {
+  if [[ -z "${AWS_SESSION_EXPIRATION:-}" ]];
+    return 0
+  fi
+
+  if ! type -P gdate >/dev/null; then
+    return 0
+  fi
+
+  local time_left="$(( $(gdate -d "$AWS_SESSION_EXPIRATION" +%s) - $(date +%s) ))"
+
+  if [[ "$time_left" -lt 600 ]]; then
+    echo "${comment}:${red}${time_left}"
+  elif [[ "$time_left" -lt 1800 ]]; then
+    echo "${comment}:${sorange}${time_left}"
+  else
+    echo "${comment}:${scyan}${time_left}"
+  fi
+}
+
 function prompt_ssh {
   # ssh trail
   local hst_this
@@ -25,9 +45,8 @@ function prompt_ssh {
     nm_user="${shigh}${nm_user}"
   fi
 
+  echo -n" ${nm_user}${shigh}@$hst_this${CONTEXT_ORG:+${scomment}:${sorange}${CONTEXT_ORG}}$(aws_expiration)"
   if [[ -n ${LC_ORIGIN:-} && $LC_ORIGIN != "$hst_this" ]]; then
-    echo " ${nm_user}${shigh}@$hst_this${CONTEXT_ORG:+${scomment}:${sorange}${CONTEXT_ORG}}${scomment}${txt_origin}"
-  else
-    echo " ${nm_user}${shigh}@$hst_this${CONTEXT_ORG:+${scomment}:${sorange}${CONTEXT_ORG}}"
+    echo "${scomment}${txt_origin}"
   fi
 }
