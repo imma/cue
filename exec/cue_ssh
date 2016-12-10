@@ -14,9 +14,9 @@ function aws_expiration {
   echo -n "${AWS_DEFAULT_REGION:+${scomment}:${syellow}${AWS_DEFAULT_REGION}}"
 
   if [[ "$time_left" -lt 1 ]]; then
-    echo -n "${scomment}:${red}EXPIRED"
+    echo -n "${scomment}:${sred}EXPIRED"
   elif [[ "$time_left" -lt 600 ]]; then
-    echo -n "${scomment}:${red}${time_left}"
+    echo -n "${scomment}:${sred}${time_left}"
   elif [[ "$time_left" -lt 1800 ]]; then
     echo -n "${scomment}:${sorange}${time_left}"
   else
