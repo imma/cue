@@ -26,8 +26,8 @@ function prompt_ssh {
   fi
 
   if [[ -n ${LC_ORIGIN:-} && $LC_ORIGIN != "$hst_this" ]]; then
-    echo " ${nm_user}${shigh}@$hst_this${scomment}${txt_origin}"
+    echo " ${nm_user}${shigh}@$hst_this${CONTEXT_ORG:+${scomment}:${sorange}${CONTEXT_ORG}}${scomment}${txt_origin}"
   else
-    echo " ${nm_user}${shigh}@$hst_this"
+    echo " ${nm_user}${shigh}@$hst_this${CONTEXT_ORG:+${scomment}:${sorange}${CONTEXT_ORG}}"
   fi
 }
