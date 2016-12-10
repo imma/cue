@@ -11,14 +11,16 @@ function aws_expiration {
 
   local time_left="$(( $(gdate -d "$AWS_SESSION_EXPIRATION" +%s) - $(date +%s) ))"
 
+  echo -n "${AWS_DEFAULT_REGION:+${scomment}:${syellow}${AWS_DEFAULT_REGION}}"
+
   if [[ "$time_left" -lt 1 ]]; then
-    echo "${comment}:${red}EXPIRED"
+    echo -n "${scomment}:${red}EXPIRED"
   elif [[ "$time_left" -lt 600 ]]; then
-    echo "${comment}:${red}${time_left}"
+    echo -n "${scomment}:${red}${time_left}"
   elif [[ "$time_left" -lt 1800 ]]; then
-    echo "${comment}:${sorange}${time_left}"
+    echo -n "${scomment}:${sorange}${time_left}"
   else
-    echo "${comment}:${scyan}${time_left}"
+    echo -n "${scomment}:${scyan}${time_left}"
   fi
 }
 
