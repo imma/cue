@@ -14,7 +14,7 @@ function configure_cue {
 }
 
 function _cue_profile {
-  local shome="${_cue_home:-"$(cd -P -- "$(dirname -- "$BASH_SOURCE")/.." && pwd -P)"}"
+  local shome="${_cue_home:="$(cd -P -- "$(dirname -- "$BASH_SOURCE")/.." && pwd -P)"}"
   PATH="$shome/exec:$PATH"
 
   source "cue_solarized"
