@@ -11,9 +11,12 @@ function git_upstream {
 }
 
 function git_project {
-  local gitname=$(git_real config remote.origin.name)
+  local nm_branch="$(git rev-parse --abbrev-ref HEAD)"
+  local nm_remote="$(git rev-parse --abbrev-ref "${nm_branch}@{upstream}")"
+  nm_remote="${nm_remote%%/*}"
+  local gitname=$(git_real config remote.${nm_remote}.name)
   if [[ -z $gitname ]]; then
-    gitname=$(basename $(git_real config remote.origin.url) .git)
+    gitname=$(basename $(git_real config remote.${nm_remote}.url) .git)
   fi
   echo "$gitname"
 }
