@@ -102,6 +102,7 @@ function prompt_git {
   local nm_project="$(cat $tmp_project)"
   local gstatus="$(cat $tmp_status)"
   local nm_branch="$(cat $tmp_branch)"
+  local nm_upstrean=
   rm -f $tmp_project $tmp_status $tmp_branch
 
   if [[ -n $nm_project ]]; then
@@ -110,11 +111,11 @@ function prompt_git {
       if [[ ${gstatus% *} != ":" ]]; then
         clr_gstatus="${syellow}"
       fi
+      nm_upstream="${scomment}/${shigh}$(git branch -vv | awk '$1 == "*" { print $4 }' | cut -d/ -f1 | cut -d'[' -f2)"
     else
       gstatus=': '
       clr_gstatus="${syellow}"
-      nm_branch="${scomment}<${sred}unknown${scomment}>"
     fi
-    echo " $nm_branch${clr_gstatus}${gstatus% *}${shigh}$nm_project${syellow}${gstatus#* }"
+    echo " $nm_branch${nm_upstream}${clr_gstatus}${gstatus% *}${shigh}$nm_project${syellow}${gstatus#* }"
   fi
 }
