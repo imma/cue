@@ -12,7 +12,7 @@ function git_upstream {
 
 function git_project {
   local nm_branch="$(git rev-parse --abbrev-ref HEAD)"
-  local nm_remote="$(git rev-parse --abbrev-ref "${nm_branch}@{upstream}")"
+  local nm_remote="$(git rev-parse --abbrev-ref "${nm_branch}@{upstream}" 2>/dev/null)"
   nm_remote="${nm_remote%%/*}"
   local gitname=$(git_real config remote.${nm_remote}.name)
   if [[ -z $gitname ]]; then
