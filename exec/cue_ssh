@@ -49,7 +49,8 @@ function prompt_ssh {
     nm_user="${shigh}${nm_user}"
   fi
 
-  echo -n" ${nm_user}${shigh}@$hst_this${CONTEXT_ORG:+${scomment}:${sorange}${CONTEXT_ORG}}$(aws_expiration)"
+  local nm_org="${AWS_VAULT:-${CONTEXT_ORG:-}}"
+  echo -n" ${nm_user}${shigh}@$hst_this${nm_org:+${scomment}:${sorange}${nm_org}}$(aws_expiration)"
   if [[ -n ${LC_ORIGIN:-} && $LC_ORIGIN != "$hst_this" ]]; then
     echo "${scomment}${txt_origin}"
   fi
