@@ -33,6 +33,9 @@ function prompt_ssh {
     hst_this=$(hostname -s)
   fi
 
+  local id_tmux="${TMUX##*/}"
+  id_tmux="${id_tmux%%,*}"
+
   export CUE_HOST="$hst_this"
 
   local txt_origin
@@ -50,7 +53,7 @@ function prompt_ssh {
   fi
 
   local nm_org="${AWS_VAULT:-${CONTEXT_ORG:-}}"
-  echo -n" ${nm_user}${shigh}@$hst_this${nm_org:+${scomment}:${sorange}${nm_org}}$(aws_expiration)"
+  echo -n" ${nm_user}${shigh}@$hst_this${id_tmux:+${scomment}//${sorange}${id_tmux}}${nm_org:+${scomment}:${sorange}${nm_org}}$(aws_expiration)"
   if [[ -n ${LC_ORIGIN:-} && $LC_ORIGIN != "$hst_this" ]]; then
     echo "${scomment}${txt_origin}"
   fi
