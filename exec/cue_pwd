@@ -3,5 +3,8 @@
 function prompt_pwd {
   # pwd
   local t='~'
-  echo " ${shigh}${PWD/$HOME/$t}"
+  echo -n " ${shigh}${PWD/$HOME/$t}"
+  if [[ -d ".terraform" ]]; then
+    echo -n "${scomment}//${scyan}$(tf workspace show)"
+  fi
 }
