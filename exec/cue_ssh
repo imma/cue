@@ -45,7 +45,7 @@ function prompt_ssh {
     export LC_ORIGIN="$hst_this${txt_origin}"
   fi
 
-  local nm_user="$LOGNAME"
+  local nm_user="${LOGNAME:-${USER}}"
 
   if [[ "$nm_user" = "root" ]]; then
     nm_user="${sorange}${nm_user}"
