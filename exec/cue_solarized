@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-source cue_colors
-
 function _ansi {
   echo -n "\[\e[${1}m\]"
 }
@@ -10,17 +8,23 @@ function _iterm {
   echo -n -e "\033]P${1}\033\\"
 }
 
-sblue="$(_ansi "$_sblue")"
-scyan="$(_ansi "$_scyan")"
-sgreen="$(_ansi "$_sgreen")"
-smagenta="$(_ansi "$_smagenta")"
-sorange="$(_ansi "$_sorange")"
-sred="$(_ansi "$_sred")"
-sviolet="$(_ansi "$_sviolet")"
-syellow="$(_ansi "$_syellow")"
+function scolors {
+  source cue_colors
+
+  sblue="$(_ansi "$_sblue")"
+  scyan="$(_ansi "$_scyan")"
+  sgreen="$(_ansi "$_sgreen")"
+  smagenta="$(_ansi "$_smagenta")"
+  sorange="$(_ansi "$_sorange")"
+  sred="$(_ansi "$_sred")"
+  sviolet="$(_ansi "$_sviolet")"
+  syellow="$(_ansi "$_syellow")"
+}
 
 function sdark {
   export CUE_SCHEME="sdark"
+
+  scolors
 
   export sbg="$(_ansi "$_sbase03")"
   export sm="$(_ansi "$_sbase02")"
@@ -38,6 +42,8 @@ function sdark {
 
 function slight {
   export CUE_SCHEME="slight"
+
+  scolors
 
   export sbg="$(_ansi "$_sbase3")"
   export sm="$(_ansi "$_sbase2")"
