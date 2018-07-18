@@ -17,6 +17,7 @@ function _cue_profile {
   local shome="${_cue_home:="$(cd -P -- "$(dirname -- "$BASH_SOURCE")/.." && pwd -P)"}"
   PATH="$shome/exec:$PATH"
 
+  source "cue_solarized"
   source "cue_pwd"
   source "cue_ssh"
   source "cue_git"
