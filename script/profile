@@ -3,7 +3,8 @@
 function configure_cue {
   case "${TERM:-}" in
     screen*) TERM="screen-256color" ;;
-    ansi)    TERM="ansi";;
+    ansi)    TERM="ansi" ;;
+    xterm*)  true ;;
     *)       TERM="xterm-256color" ;;
   esac
   export TERM
