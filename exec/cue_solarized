@@ -11,6 +11,8 @@ function _iterm {
 function scolors {
   source cue_colors
 
+	configure_cue
+
   sblue="$(_ansi "$_sblue")"
   scyan="$(_ansi "$_scyan")"
   sgreen="$(_ansi "$_sgreen")"
@@ -57,4 +59,16 @@ function slight {
       _iterm "g$xbase00"
       ;;
   esac
+}
+
+function configure_cue {
+  case "${TERM:-}" in
+    screen*) TERM="screen-256color" ;;
+    ansi)    TERM="ansi" ;;
+    xterm*)  true ;;
+    *)       TERM="xterm-256color" ;;
+  esac
+  export TERM
+
+  : ${SHLVL_INITIAL:=0}
 }
