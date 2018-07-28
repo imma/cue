@@ -9,7 +9,12 @@ function _iterm {
 }
 
 function scolors {
-  source cue_colors
+  source "cue_pwd"
+  source "cue_ssh"
+  source "cue_git"
+  source "cue_theme"
+  source "cue_prompt"
+  source "cue_colors"
 
 	configure_cue
 

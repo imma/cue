@@ -1,15 +1,14 @@
 #!/usr/bin/env bash
 
+function _update_ps1_powerline() {
+  PS1="$(powerline -error $? -mode flat)"
+}
+
 function _cue_profile {
   local shome="${_cue_home:="$(cd -P -- "$(dirname -- "$BASH_SOURCE")/.." && pwd -P)"}"
-  PATH="$shome/exec:$PATH"
+  PATH="$shome/bin:$shome/exec:$PATH"
 
-  source "cue_solarized"
-  source "cue_pwd"
-  source "cue_ssh"
-  source "cue_git"
-  source "cue_theme"
-  source "cue_prompt"
+    source "cue_solarized"
 }
 
 _cue_profile

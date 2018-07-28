@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+function _update_ps1_powerline() {
+  PS1="$(powerline -error $? -mode flat)"
+}
+
+PROMPT_COMMAND="_update_ps1_powerline; $PROMPT_COMMAND"
