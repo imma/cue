@@ -5,7 +5,7 @@ function filter_prompt {
 }
 
 function _update_ps1_powerline() {
-  PS1="$(powerline -error $? -mode flat -colorize-hostname -newline -cwd-mode plain -priority root,cwd,user,host,ssh,perms,git-branch,jobs,exit,cwd-path,git-status -numeric-exit-codes -modules user,host,ssh,cwd,perms,gitlite,jobs,exit | filter_prompt)"
+  PS1="$(echo; powerline -error $? -mode flat -colorize-hostname -newline -cwd-mode plain -priority root,cwd,user,host,ssh,perms,git-branch,jobs,exit,cwd-path,git-status -numeric-exit-codes -modules user,host,ssh,cwd,perms,git,jobs,exit | filter_prompt)"
 }
 
 PROMPT_COMMAND="_update_ps1_powerline"
