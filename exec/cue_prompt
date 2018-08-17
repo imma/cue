@@ -1,15 +1,17 @@
 #!/bin/bash
 
 function prompt_shell {
-  if [[ "${SHLVL}" = "${SHLVL_INITIAL}" ]]; then
-    echo "${shigh}\$HISTCMD "
-  else
-    if [[ -n "${SHLVL_NAME:-}" ]]; then
-      echo "${scyan}$SHLVL_NAME${scomment}/${shigh}\$HISTCMD "
-    else
-      echo "${scyan}$(( SHLVL - SHLVL_INITIAL ))${scomment}/${shigh}\$HISTCMD "
-    fi
+  if [[ "${SHLVL}" == "${SHLVL_INITIAL}" ]]; then
+    return 0
   fi
+
+  local a=0
+  local dashes
+  while [[ "$a" -lt $(( SHLVL - SHLVL_INITIAL )) ]]; do
+    dashes="${dashes}>"
+    a=$((a + 1))
+  done
+  echo -n "$dashes"
 }
 
 function prompt_error {
@@ -30,9 +32,9 @@ function prompt_jobs {
 
 function prompt_root {
   if [[ $UID = 0 ]]; then
-    echo -n "${sorange}>>>"
+    echo -n "${sorange}"
   else
-    echo -n "${shigh}=>"
+    echo -n "${shigh}"
   fi
 }
 

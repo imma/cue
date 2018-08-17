@@ -4,7 +4,7 @@ PS1_START='${scomment}'
 PS1_LEFT='${prn_git}${prn_pwd}'
 PS1_RIGHT='${prn_ssh}'
 PS1_END=' ${scomment} '
-PS1_BREAK='${prn_error}${prn_jobs}${prn_shell}${prn_root}${prn_cli}'
+PS1_BREAK='${prn_error}${prn_jobs}${prn_root}${prn_shell}${prn_cli}'
 
 function default_theme {
   PS1="$(eval echo "${PS1_START}${PS1_LEFT}")"
