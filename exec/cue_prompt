@@ -18,7 +18,7 @@ function prompt_error {
   # optional error
   local err_last="$RETVAL"
   if [[ -n $err_last && $err_last != 0 ]]; then
-    echo -n "${scomment}[${sorange}$err_last${scomment}] "
+    echo -n "${scomment}[${sorange}$err_last${scomment}]"
   fi
 }
 
