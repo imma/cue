@@ -34,7 +34,7 @@ function prompt_root {
   if [[ $UID = 0 ]]; then
     echo -n "${sorange}"
   else
-    echo -n "${shigh}"
+    echo -n "${scyan}"
   fi
 }
 
