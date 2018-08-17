@@ -119,6 +119,6 @@ function prompt_git {
       gstatus=': '
       clr_gstatus="${syellow}"
     fi
-    echo " $nm_branch${nm_upstream}${clr_gstatus}${gstatus% *}${shigh}$nm_project${syellow}${gstatus#* }"
+    echo "$nm_branch${nm_upstream}${clr_gstatus}${gstatus% *}${shigh}$nm_project${syellow}${gstatus#* }"
   fi
 }
