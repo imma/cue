@@ -11,7 +11,7 @@ function prompt_shell {
     dashes="${dashes}>"
     a=$((a + 1))
   done
-  echo -n "$dashes"
+  echo -n " $dashes"
 }
 
 function prompt_error {
