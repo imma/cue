@@ -112,9 +112,17 @@ function prompt_git {
         clr_gstatus="${syellow}"
       fi
       local nm_remote="$(git branch -vv | awk '$1 == "*" { print $4 }' | cut -d/ -f1 | cut -d'[' -f2)"
-      if [[ "$nm_remote" != "at" ]]; then
-        nm_upstream="${scomment}/${shigh}${nm_remote}"
-      fi
+      case "$nm_remote" in
+        origin)
+          nm_upstream=
+          ;;
+        at)
+          nm_upstream=
+          ;;
+        *)
+          nm_upstream="${scomment}/${shigh}${nm_remote}"
+          ;;
+      esac
     else
       gstatus=': '
       clr_gstatus="${syellow}"
