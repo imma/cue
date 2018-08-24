@@ -17,6 +17,7 @@ function main {
   pushd "$shome/bin"
   cp "${DATA}/cache/curl/$fnm_powerline" "$shome/bin/powerline"
   chmod 755 "$shome/bin/powerline"
+  ln -nfs powerline "$shome/bin/powerline-go"
   popd
 }
 
