@@ -1,5 +1,15 @@
 #!/bin/bash
 
+function aws_ecs {
+  if [[ ! -f /etc/ecs/ecs.config ]]; then
+    return 0
+  fi
+
+  source /etc/ecs/ecs.config
+
+  echo "${scyan}${ECS_CLUSTER}${scomment}//"
+}
+
 function aws_expiration {
   if [[ -z "${AWS_SESSION_EXPIRATION:-}" ]]; then
     return 0
@@ -54,7 +64,7 @@ function prompt_ssh {
   fi
 
   local nm_org="${AWS_VAULT:-${CONTEXT_ORG:-}}"
-  echo -n" ${nm_user}${shigh}@$hst_this${id_tmux:+${scomment}//${sorange}${id_tmux}}${nm_org:+${scomment}:${sorange}${nm_org}}$(aws_expiration)"
+  echo -n" $(aws_ecs)${shigh}${nm_user}@$hst_this${id_tmux:+${scomment}//${sorange}${id_tmux}}${nm_org:+${scomment}:${sorange}${nm_org}}$(aws_expiration)"
   if [[ -n ${LC_ORIGIN:-} && $LC_ORIGIN != "$hst_this" ]]; then
     echo "${scomment}${txt_origin}"
   fi
