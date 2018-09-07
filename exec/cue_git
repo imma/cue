@@ -48,7 +48,10 @@ function git_branch {
     fi
   fi
   
-  echo "${nm_branch/\//\/${stext}}"
+  nm_branch="${nm_branch/origin\//${stext}}"
+  nm_branch="${nm_branch/\///${stext}}"
+
+  echo "${nm_branch}"
 } 
 
 function git_status {
