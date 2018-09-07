@@ -7,7 +7,7 @@ function git_real {
 function git_upstream {
   local nm_branch="$1"; shift
 
-  git for-each-ref --shell --format="%(upstream:short)" "refs/heads/$nm_branch" | cut -d"'" -f2 | cut -d/ -f2-
+  git rev-parse --abbrev-ref --symbolic-full-name @{u}
 }
 
 function git_project {
@@ -25,19 +25,7 @@ function git_branch {
   local nm_heads="$(git_real symbolic-ref HEAD 2> /dev/null)"
   nm_heads="${nm_heads/refs\/heads\//}"
 
-  local nm_branch=""
-  if [[ -n "$nm_heads" ]]; then
-    if [[ "$nm_heads" = "production" ]]; then
-      nm_branch="${syellow}$nm_heads"
-    else
-      nm_branch="${shigh}$nm_heads"
-    fi
-
-    local nm_upstream="$(git_upstream "$nm_heads")"
-    if [[ "$nm_upstream" != "$nm_heads" ]]; then
-      nm_branch="${nm_branch}=>${syellow}${nm_upstream}:"
-    fi
-  fi
+  local nm_branch="$(git_upstream "$nm_heads")"
 
   local sha="$(git_real rev-parse HEAD)"
   local nm_tags="$(git_real show-ref --tags | grep ^$sha | cut -d/ -f3- | xargs -- | sed 's# #,#g')"
@@ -60,7 +48,7 @@ function git_branch {
     fi
   fi
   
-  echo "$nm_branch"
+  echo "${nm_branch/\//\/${stext}}"
 } 
 
 function git_status {
@@ -71,8 +59,6 @@ function git_status {
     echo -n "^"
   elif [[ $(grep -c "# Your branch is behind" $gitstat) > 0 ]]; then
     echo -n "v"
-  else
-    echo -n ":"
   fi
 
   echo -n " "
@@ -108,7 +94,7 @@ function prompt_git {
   if [[ -n $nm_project ]]; then
     local clr_gstatus="${scomment}"
     if [[ -n $nm_branch ]]; then
-      if [[ ${gstatus% *} != ":" ]]; then
+      if [[ ${gstatus% *} != "/" ]]; then
         clr_gstatus="${syellow}"
       fi
       local nm_remote="$(git branch -vv | awk '$1 == "*" { print $4 }' | cut -d/ -f1 | cut -d'[' -f2)"
@@ -120,13 +106,13 @@ function prompt_git {
           nm_upstream=
           ;;
         *)
-          nm_upstream="${scomment}/${shigh}${nm_remote}"
+          nm_upstream="${scomment}"
           ;;
       esac
     else
       gstatus=': '
-      clr_gstatus="${syellow}"
+      clr_gstatus="t ${syellow}"
     fi
-    echo "$nm_branch${nm_upstream}${clr_gstatus}${gstatus% *}${shigh}$nm_project${syellow}${gstatus#* }"
+    echo "${shigh}${nm_project}${scomment}/${nm_branch}${clr_gstatus}${gstatus% *}${syellow}${gstatus#* }"
   fi
 }
