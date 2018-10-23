@@ -13,7 +13,6 @@ function scolors {
   source "cue_ssh"
   source "cue_git"
   source "cue_theme"
-  source "cue_prompt"
   source "cue_colors"
 
 	configure_cue
